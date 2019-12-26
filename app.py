@@ -34,8 +34,6 @@ app.config['SECRET_KEY'] = 'shhh, secret!'
 db = SQLAlchemy(app)
 
 
-
-
 class Entry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(250))
@@ -68,6 +66,11 @@ class Entry(db.Model):
     @classmethod
     def drafts(cls):
         return Entry.query.filter(Entry.published == False).order_by(Entry.timestamp.desc())
+
+
+@app.context_processor
+def inject_globals():
+    return {'now': datetime.datetime.utcnow()}
 
 def login_required(fn):
     @functools.wraps(fn)
@@ -135,7 +138,7 @@ def create():
 def drafts():
     return render_template('index.html', entries=Entry.drafts().all())
 
-@app.route('/<slug>/')
+@app.route('/posts/<slug>/')
 def detail(slug):
     print(slug)
     if session.get('logged_in'):
@@ -145,7 +148,7 @@ def detail(slug):
     entry = query.first()
     return render_template('detail.html', entry=entry, slug=entry.slug)
 
-@app.route('/<slug>/edit/', methods=['GET', 'POST'])
+@app.route('/posts/<slug>/edit/', methods=['GET', 'POST'])
 @login_required
 def edit(slug):
     entry = Entry.query.filter(Entry.slug == slug).first()
