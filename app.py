@@ -42,7 +42,7 @@ class Entry(db.Model):
     slug = db.Column(db.String(250), unique=True)
     content = db.Column(db.String(1000))
     published = db.Column(db.Boolean,index=True)
-    timestamp = db.Column(db.Datetime, default=datetime.datetime.utcnow, index=True)
+    timestamp = db.Column(db.DateTime, default=datetime.datetime.utcnow, index=True)
 
     @property
     def html_content(self):
@@ -63,11 +63,11 @@ class Entry(db.Model):
 
     @classmethod
     def public(cls):
-        return Entry.query.filter(Entry.published == True).order_by(Entry.timestamp.desc()).all();
+        return Entry.query.filter(Entry.published == True).order_by(Entry.timestamp.desc())
 
     @classmethod
     def drafts(cls):
-        return Entry.query.filter(Entry.published == True).order_by(Entry.timestamp.desc()).all();
+        return Entry.query.filter(Entry.published == True).order_by(Entry.timestamp.desc())
 
 def login_required(fn):
     @functools.wraps(fn)
@@ -102,7 +102,7 @@ def logout():
 
 @app.route('/')
 def index():
-    return render_template('index.html', entries=Entry.public())
+    return render_template('index.html', entries=Entry.public().all())
 
 def _create_or_edit(entry, template):
     if request.method == 'POST':
@@ -133,21 +133,21 @@ def create():
 @app.route('/drafts/')
 @login_required
 def drafts():
-    return render_template('index.html', entries=Entry.drafts())
+    return render_template('index.html', entries=Entry.drafts().all())
 
 @app.route('/<slug>/')
 def detail(slug):
     if session.get('logged_in'):
-        query = Entry.select()
+        query = Entry.query.filter(Entry.slug == slug)
     else:
-        query = Entry.public()
-    entry = get_object_or_404(query, Entry.slug == slug)
+        query = Entry.public().filter(Entry.slug == slug)
+    entry = query.first()
     return render_template('detail.html', entry=entry)
 
 @app.route('/<slug>/edit/', methods=['GET', 'POST'])
 @login_required
 def edit(slug):
-    entry = get_object_or_404(Entry, Entry.slug == slug)
+    entry = Entry.query.filter(Entry.slug == slug).first()
     return _create_or_edit(entry, 'edit.html')
 
 @app.template_filter('clean_querystring')
@@ -168,7 +168,7 @@ def not_found(exc):
     return Response('<h3>Not found</h3>'), 404
 
 def main():
-    database.create_all()
+    db.create_all()
     app.run(debug=True)
 
 if __name__ == '__main__':
