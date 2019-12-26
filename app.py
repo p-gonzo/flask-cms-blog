@@ -15,9 +15,6 @@ from flask import (
 )
 
 from sqlalchemy import exc
-from markdown import markdown
-from markdown.extensions.codehilite import CodeHiliteExtension
-from markdown.extensions.extra import ExtraExtension
 
 from main import app, db
 from models import Entry
