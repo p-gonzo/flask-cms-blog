@@ -4,13 +4,22 @@ import os
 import re
 import urllib
 
-from flask import (Flask, flash, Markup, redirect, render_template, request,
-                   Response, session, url_for)
+from flask import (
+    Flask,
+    flash,
+    Markup,
+    redirect,
+    render_template,
+    request,
+    Response,
+    session,
+    url_for
+)
+from flask_sqlalchemy import SQLAlchemy
 from markdown import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
 from markdown.extensions.extra import ExtraExtension
-from micawber import bootstrap_basic, parse_html
-from micawber.cache import Cache as OEmbedCache
+
 from peewee import *
 from playhouse.flask_utils import FlaskDB, get_object_or_404, object_list
 from playhouse.sqlite_ext import *
@@ -32,30 +41,24 @@ DEBUG = False
 # in cookies. Make this unique for your app.
 SECRET_KEY = 'shhh, secret!'
 
-# This is used by micawber, which will attempt to generate rich media
-# embedded objects with maxwidth=800.
-SITE_WIDTH = 800
-
-
 # Create a Flask WSGI app and configure it using values from the module.
 app = Flask(__name__)
 app.config.from_object(__name__)
 
 # FlaskDB is a wrapper for a peewee database that sets up pre/post-request
 # hooks for managing database connections.
-flask_db = FlaskDB(app)
 
-# The `database` is the actual peewee database, as opposed to flask_db which is
+# db = FlaskDB(app)
+db = SQLAlchemy(app)
+
+# The `database` is the actual peewee database, as opposed to db which is
 # the wrapper.
-database = flask_db.database
-
-# Configure micawber with the default OEmbed providers (YouTube, Flickr, etc).
-# We'll use a simple in-memory cache so that multiple requests for the same
-# video don't require multiple network requests.
-oembed_providers = bootstrap_basic(OEmbedCache())
+database = db
 
 
-class Entry(flask_db.Model):
+
+class Entry(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     title = CharField()
     slug = CharField(unique=True)
     content = TextField()
@@ -72,12 +75,7 @@ class Entry(flask_db.Model):
         hilite = CodeHiliteExtension(linenums=False, css_class='highlight')
         extras = ExtraExtension()
         markdown_content = markdown(self.content, extensions=[hilite, extras])
-        oembed_content = parse_html(
-            markdown_content,
-            oembed_providers,
-            urlize_all=True,
-            maxwidth=app.config['SITE_WIDTH'])
-        return Markup(oembed_content)
+        return Markup(markdown_content)
 
     def save(self, *args, **kwargs):
         # Generate a URL-friendly representation of the entry's title.
@@ -259,7 +257,7 @@ def not_found(exc):
     return Response('<h3>Not found</h3>'), 404
 
 def main():
-    database.create_tables([Entry, FTSEntry], safe=True)
+    database.create_all([Entry, FTSEntry], safe=True)
     app.run(debug=True)
 
 if __name__ == '__main__':
