@@ -22,15 +22,15 @@ from markdown.extensions.codehilite import CodeHiliteExtension
 from markdown.extensions.extra import ExtraExtension
 
 
-ADMIN_PASSWORD = 'secret'
 APP_DIR = os.path.dirname(os.path.realpath(__file__))
 
-DATABASE = 'sqliteext:///%s' % os.path.join(APP_DIR, 'blog.db')
+DATABASE = 'sqlite:///%s' % os.path.join(APP_DIR, 'blog.db')
 DEBUG = False
 
-SECRET_KEY = 'shhh, secret!'
-
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///%s' % os.path.join(APP_DIR, 'blog.db')
+app.config['ADMIN_PASSWORD'] = 'secret'
+app.config['SECRET_KEY'] = 'shhh, secret!'
 db = SQLAlchemy(app)
 
 
@@ -59,7 +59,7 @@ class Entry(db.Model):
         if not self.slug:
             self.slug = re.sub('[^\w]+', '-', self.title.lower()).strip('-')
         ret = db.session.add(self)
-        db.commit()
+        db.session.commit()
 
     @classmethod
     def public(cls):
@@ -67,7 +67,7 @@ class Entry(db.Model):
 
     @classmethod
     def drafts(cls):
-        return Entry.query.filter(Entry.published == True).order_by(Entry.timestamp.desc())
+        return Entry.query.filter(Entry.published == False).order_by(Entry.timestamp.desc())
 
 def login_required(fn):
     @functools.wraps(fn)
@@ -108,7 +108,7 @@ def _create_or_edit(entry, template):
     if request.method == 'POST':
         entry.title = request.form.get('title') or ''
         entry.content = request.form.get('content') or ''
-        entry.published = request.form.get('published') or False
+        entry.published = True if request.form.get('published') == 'y' else False
         if not (entry.title and entry.content):
             flash('Title and Content are required.', 'danger')
         else:
@@ -137,12 +137,13 @@ def drafts():
 
 @app.route('/<slug>/')
 def detail(slug):
+    print(slug)
     if session.get('logged_in'):
         query = Entry.query.filter(Entry.slug == slug)
     else:
         query = Entry.public().filter(Entry.slug == slug)
     entry = query.first()
-    return render_template('detail.html', entry=entry)
+    return render_template('detail.html', entry=entry, slug=entry.slug)
 
 @app.route('/<slug>/edit/', methods=['GET', 'POST'])
 @login_required
