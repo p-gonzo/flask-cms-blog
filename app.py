@@ -141,7 +141,6 @@ def drafts():
 
 @app.route('/posts/<slug>/')
 def detail(slug):
-    print(slug)
     if session.get('logged_in'):
         query = Entry.query.filter(Entry.slug == slug)
     else:
