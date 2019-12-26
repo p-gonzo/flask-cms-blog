@@ -16,61 +16,38 @@ from flask import (
     url_for
 )
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import exc
 from markdown import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
 from markdown.extensions.extra import ExtraExtension
 
-from peewee import *
-from playhouse.flask_utils import FlaskDB, get_object_or_404, object_list
-from playhouse.sqlite_ext import *
 
-
-# Blog configuration values.
-
-# You may consider using a one-way hash to generate the password, and then
-# use the hash again in the login view to perform the comparison. This is just
-# for simplicity.
 ADMIN_PASSWORD = 'secret'
 APP_DIR = os.path.dirname(os.path.realpath(__file__))
 
-# The playhouse.flask_utils.FlaskDB object accepts database URL configuration.
 DATABASE = 'sqliteext:///%s' % os.path.join(APP_DIR, 'blog.db')
 DEBUG = False
 
-# The secret key is used internally by Flask to encrypt session data stored
-# in cookies. Make this unique for your app.
 SECRET_KEY = 'shhh, secret!'
 
-# Create a Flask WSGI app and configure it using values from the module.
 app = Flask(__name__)
-app.config.from_object(__name__)
-
-# FlaskDB is a wrapper for a peewee database that sets up pre/post-request
-# hooks for managing database connections.
-
-# db = FlaskDB(app)
 db = SQLAlchemy(app)
 
-# The `database` is the actual peewee database, as opposed to db which is
-# the wrapper.
-database = db
 
 
 
 class Entry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = CharField()
-    slug = CharField(unique=True)
-    content = TextField()
-    published = BooleanField(index=True)
-    timestamp = DateTimeField(default=datetime.datetime.now, index=True)
+    title = db.Column(db.String(250))
+    slug = db.Column(db.String(250), unique=True)
+    content = db.Column(db.String(1000))
+    published = db.Column(db.Boolean,index=True)
+    timestamp = db.Column(db.Datetime, default=datetime.datetime.utcnow, index=True)
 
     @property
     def html_content(self):
         """
-        Generate HTML representation of the markdown-formatted blog entry,
-        and also convert any media URLs into rich media objects such as video
-        players or images.
+        Generate HTML representation of the markdown-formatted blog entry
         """
         hilite = CodeHiliteExtension(linenums=False, css_class='highlight')
         extras = ExtraExtension()
@@ -81,64 +58,16 @@ class Entry(db.Model):
         # Generate a URL-friendly representation of the entry's title.
         if not self.slug:
             self.slug = re.sub('[^\w]+', '-', self.title.lower()).strip('-')
-        ret = super(Entry, self).save(*args, **kwargs)
-
-        # Store search content.
-        self.update_search_index()
-        return ret
-
-    def update_search_index(self):
-        # Create a row in the FTSEntry table with the post content. This will
-        # allow us to use SQLite's awesome full-text search extension to
-        # search our entries.
-        exists = (FTSEntry
-                  .select(FTSEntry.docid)
-                  .where(FTSEntry.docid == self.id)
-                  .exists())
-        content = '\n'.join((self.title, self.content))
-        if exists:
-            (FTSEntry
-             .update({FTSEntry.content: content})
-             .where(FTSEntry.docid == self.id)
-             .execute())
-        else:
-            FTSEntry.insert({
-                FTSEntry.docid: self.id,
-                FTSEntry.content: content}).execute()
+        ret = db.session.add(self)
+        db.commit()
 
     @classmethod
     def public(cls):
-        return Entry.select().where(Entry.published == True)
+        return Entry.query.filter(Entry.published == True).order_by(Entry.timestamp.desc()).all();
 
     @classmethod
     def drafts(cls):
-        return Entry.select().where(Entry.published == False)
-
-    @classmethod
-    def search(cls, query):
-        words = [word.strip() for word in query.split() if word.strip()]
-        if not words:
-            # Return an empty query.
-            return Entry.noop()
-        else:
-            search = ' '.join(words)
-
-        # Query the full-text search index for entries matching the given
-        # search query, then join the actual Entry data on the matching
-        # search result.
-        return (Entry
-                .select(Entry, FTSEntry.rank().alias('score'))
-                .join(FTSEntry, on=(Entry.id == FTSEntry.docid))
-                .where(
-                    FTSEntry.match(search) &
-                    (Entry.published == True))
-                .order_by(SQL('score')))
-
-class FTSEntry(FTSModel):
-    content = TextField()
-
-    class Meta:
-        database = database
+        return Entry.query.filter(Entry.published == True).order_by(Entry.timestamp.desc()).all();
 
 def login_required(fn):
     @functools.wraps(fn)
@@ -173,21 +102,7 @@ def logout():
 
 @app.route('/')
 def index():
-    search_query = request.args.get('q')
-    if search_query:
-        query = Entry.search(search_query)
-    else:
-        query = Entry.public().order_by(Entry.timestamp.desc())
-
-    # The `object_list` helper will take a base query and then handle
-    # paginating the results if there are more than 20. For more info see
-    # the docs:
-    # http://docs.peewee-orm.com/en/latest/peewee/playhouse.html#object_list
-    return object_list(
-        'index.html',
-        query,
-        search=search_query,
-        check_bounds=False)
+    return render_template('index.html', entries=Entry.public())
 
 def _create_or_edit(entry, template):
     if request.method == 'POST':
@@ -197,12 +112,9 @@ def _create_or_edit(entry, template):
         if not (entry.title and entry.content):
             flash('Title and Content are required.', 'danger')
         else:
-            # Wrap the call to save in a transaction so we can roll it back
-            # cleanly in the event of an integrity error.
             try:
-                with database.atomic():
-                    entry.save()
-            except IntegrityError:
+                entry.save()
+            except exc.IntegrityError:
                 flash('Error: this title is already in use.', 'danger')
             else:
                 flash('Entry saved successfully.', 'success')
@@ -221,8 +133,7 @@ def create():
 @app.route('/drafts/')
 @login_required
 def drafts():
-    query = Entry.drafts().order_by(Entry.timestamp.desc())
-    return object_list('index.html', query, check_bounds=False)
+    return render_template('index.html', entries=Entry.drafts())
 
 @app.route('/<slug>/')
 def detail(slug):
@@ -257,7 +168,7 @@ def not_found(exc):
     return Response('<h3>Not found</h3>'), 404
 
 def main():
-    database.create_all([Entry, FTSEntry], safe=True)
+    database.create_all()
     app.run(debug=True)
 
 if __name__ == '__main__':
