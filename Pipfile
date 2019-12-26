@@ -7,13 +7,12 @@ verify_ssl = true
 pylint-flask = "*"
 
 [packages]
-beautifulsoup4 = "*"
-micawber = "*"
-peewee = "*"
 Flask = "*"
-Pygments = "*"
 Markdown = "*"
 flask-sqlalchemy = "*"
+pygments = "*"
+psycopg2-binary = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"

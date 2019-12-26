@@ -21,16 +21,17 @@ from markdown import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
 from markdown.extensions.extra import ExtraExtension
 
-
-APP_DIR = os.path.dirname(os.path.realpath(__file__))
-
-DATABASE = 'sqlite:///%s' % os.path.join(APP_DIR, 'blog.db')
-DEBUG = False
-
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///%s' % os.path.join(APP_DIR, 'blog.db')
-app.config['ADMIN_PASSWORD'] = 'secret'
-app.config['SECRET_KEY'] = 'shhh, secret!'
+
+# Connect to local sqlite3 file or deployed postgres instance
+if os.environ['RUN_ENVIRON'] == 'local':
+    APP_DIR = os.path.dirname(os.path.realpath(__file__))
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///%s' % os.path.join(APP_DIR, 'blog.db')
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(user=os.environ["DB_USER"],pw=os.environ["DB_PASS"],url=os.environ["DB_URL"],db=os.environ["DB_NAME"])
+
+app.config['ADMIN_PASSWORD'] = os.environ['ADMIN_PASSWORD']
+app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 db = SQLAlchemy(app)
 
 
@@ -56,7 +57,7 @@ class Entry(db.Model):
         # Generate a URL-friendly representation of the entry's title.
         if not self.slug:
             self.slug = re.sub('[^\w]+', '-', self.title.lower()).strip('-')
-        ret = db.session.add(self)
+        db.session.add(self)
         db.session.commit()
 
     @classmethod
