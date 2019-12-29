@@ -26,8 +26,8 @@
       <div class="navbar-container">
         <ul class="navbar-content" id="navbar-content">
             <a href="{{ url_for('index') }}"><li>Blog</li></a>
-            <a href="#"><li>About</li></a>
-            <a href="#"><li>Contact</li></a>
+            <a href="{{ url_for('about') }}"><li>About</li></a>
+            <a href="{{ url_for('contact') }}"><li>Contact</li></a>
             {% block extra_header %}{% endblock %}
           {% if session.logged_in %}
             <a href="{{ url_for('drafts') }}"><li>Drafts</li></a>

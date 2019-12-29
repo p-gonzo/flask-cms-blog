@@ -195,3 +195,29 @@ img {
     max-width: 75%;
 }
 
+.logout-div, .login-div {
+    display: flex;
+    width: 50%;
+    margin: 0 auto;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 2em;
+    font-weight: 100;
+}
+.logout-div form button, .login-div form button, .login-div form input {
+    font-size: 1em;
+    font-weight: 100;
+    transition: all 0.5s;
+    text-align: center;
+}
+.logout-div form button:hover {
+    background-color: lightcoral;
+    color: white;
+    cursor: pointer;
+}
+.login-div form button:hover {
+    background-color: lightgreen;
+    color: white;
+    cursor: pointer;
+}
+

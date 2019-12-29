@@ -88,6 +88,25 @@ def create():
 def drafts():
     return render_template('index.html', entries=Post.drafts().all())
 
+
+@app.route('/about/')
+def about():
+    query = Post.query.filter(Post.slug == 'about')
+    post = query.first()
+    try:
+        return render_template('detail.html', post=post, slug=post.slug)
+    except AttributeError:
+        return not_found(None);
+
+@app.route('/contact/')
+def contact():
+    query = Post.query.filter(Post.slug == 'contact')
+    post = query.first()
+    try:
+        return render_template('detail.html', post=post, slug=post.slug)
+    except AttributeError:
+        return not_found(None);
+
 @app.route('/posts/<slug>/')
 def detail(slug):
     if session.get('logged_in'):
@@ -95,7 +114,11 @@ def detail(slug):
     else:
         query = Post.public().filter(Post.slug == slug)
     post = query.first()
-    return render_template('detail.html', post=post, slug=post.slug)
+    try:
+        return render_template('detail.html', post=post, slug=post.slug)
+    except AttributeError:
+        return not_found(None);
+
 
 @app.route('/posts/<slug>/edit/', methods=['GET', 'POST'])
 @login_required
@@ -105,7 +128,8 @@ def edit(slug):
 
 @app.errorhandler(404)
 def not_found(exc):
-    return Response('<h3>Not found</h3>'), 404
+    flash('That page does not exist', 'danger')
+    return render_template('index.html', entries=Post.public().all())
 
 def main():
     db.create_all()

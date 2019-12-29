@@ -12,9 +12,12 @@
 {% endblock %}
 
 {% block content %}
+  {% if post.slug == 'about' or post.slug == 'contact' %}
+  {% else %}
   <div class="post-created">
     <p class="post-created-utc-string">{{ post.created }}</p>
   </div>
+  {% endif %}
   <div class="post-content">
     {{ post.html_content }}
   </div>

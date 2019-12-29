@@ -12,6 +12,8 @@ function hasClass(elem, className) {
 document.addEventListener('click', evt => {
   if (hasClass(evt.target, 'close')) {
     evt.target.parentNode.remove();
+  } else if (hasClass(evt.target, 'fa-times')) {
+    evt.target.parentNode.parentNode.remove();
   }
 }, false);
 

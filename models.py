@@ -36,7 +36,11 @@ class Post(db.Model):
 
     @classmethod
     def public(cls):
-        return Post.query.filter(Post.published == True).order_by(Post.created.desc())
+        return Post.query.filter(
+            Post.published == True,
+            Post.slug != 'about',
+            Post.slug != 'contact'
+        ).order_by(Post.created.desc())
 
     @classmethod
     def drafts(cls):
