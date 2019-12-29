@@ -1,16 +1,5 @@
 {% extends "base.html" %}
 
-{% block extra_scripts %}
-<script>
-setTimeout(() => {
-  var postsCreated = [ ...document.getElementsByClassName('post-created-utc-string')];
-  postsCreated.forEach(date => {
-    date.innerHTML = moment.utc(date.innerHTML).local().calendar(); //moment.utc(date.innerHTML).local().format('MMMM Do YYYY, h:mm:ss a');
-  });
-}, 0);
-</script>
-{% endblock extra_scripts %}
-
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content_title %}{{ post.title }}{% endblock %}
