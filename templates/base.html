@@ -30,18 +30,11 @@
           <ul class="nav navbar-nav">
             {% if session.logged_in %}
               <li><a href="{{ url_for('drafts') }}">Drafts</a></li>
-              <li><a href="{{ url_for('create') }}">Create Entry</a></li>
+              <li><a href="{{ url_for('create') }}">Create Post</a></li>
               <li><a href="{{ url_for('logout') }}">Log out</a></li>
             {% endif %}
             {% block extra_header %}{% endblock %}
           </ul>
-          {% block search_bar %}
-            <form action="{{ url_for('index') }}" class="navbar-form navbar-right" id="search-form" method="get" role="search">
-              <div class="form-group">
-                <input class="form-control" name="q" placeholder="Search" type="text" value="{% if search %}{{ search }}{% endif %}">
-              </div>
-            </form>
-          {% endblock %}
         </div>
       </div>
     </div>

@@ -1,7 +1,6 @@
 import datetime
 import functools
 import os
-import re
 import urllib
 
 from flask import (
@@ -17,7 +16,7 @@ from flask import (
 from sqlalchemy import exc
 
 from main import app, db
-from models import Entry
+from models import Post
 
 @app.context_processor
 def inject_globals():
@@ -56,53 +55,53 @@ def logout():
 
 @app.route('/')
 def index():
-    return render_template('index.html', entries=Entry.public().all())
+    return render_template('index.html', entries=Post.public().all())
 
-def _create_or_edit(entry, template):
+def _create_or_edit(post, template):
     if request.method == 'POST':
-        entry.title = request.form.get('title') or ''
-        entry.content = request.form.get('content') or ''
-        entry.published = True if request.form.get('published') == 'y' else False
-        if not (entry.title and entry.content):
+        post.title = request.form.get('title') or ''
+        post.content = request.form.get('content') or ''
+        post.published = True if request.form.get('published') == 'y' else False
+        if not (post.title and post.content):
             flash('Title and Content are required.', 'danger')
         else:
             try:
-                entry.save()
+                post.save()
             except exc.IntegrityError:
                 flash('Error: this title is already in use.', 'danger')
             else:
-                flash('Entry saved successfully.', 'success')
-                if entry.published:
-                    return redirect(url_for('detail', slug=entry.slug))
+                flash('Post saved successfully.', 'success')
+                if post.published:
+                    return redirect(url_for('detail', slug=post.slug))
                 else:
-                    return redirect(url_for('edit', slug=entry.slug))
+                    return redirect(url_for('edit', slug=post.slug))
 
-    return render_template(template, entry=entry)
+    return render_template(template, post=post)
 
 @app.route('/create/', methods=['GET', 'POST'])
 @login_required
 def create():
-    return _create_or_edit(Entry(title='', content=''), 'create.html')
+    return _create_or_edit(Post(title='', content=''), 'create.html')
 
 @app.route('/drafts/')
 @login_required
 def drafts():
-    return render_template('index.html', entries=Entry.drafts().all())
+    return render_template('index.html', entries=Post.drafts().all())
 
 @app.route('/posts/<slug>/')
 def detail(slug):
     if session.get('logged_in'):
-        query = Entry.query.filter(Entry.slug == slug)
+        query = Post.query.filter(Post.slug == slug)
     else:
-        query = Entry.public().filter(Entry.slug == slug)
-    entry = query.first()
-    return render_template('detail.html', entry=entry, slug=entry.slug)
+        query = Post.public().filter(Post.slug == slug)
+    post = query.first()
+    return render_template('detail.html', post=post, slug=post.slug)
 
 @app.route('/posts/<slug>/edit/', methods=['GET', 'POST'])
 @login_required
 def edit(slug):
-    entry = Entry.query.filter(Entry.slug == slug).first()
-    return _create_or_edit(entry, 'edit.html')
+    post = Post.query.filter(Post.slug == slug).first()
+    return _create_or_edit(post, 'edit.html')
 
 @app.errorhandler(404)
 def not_found(exc):
