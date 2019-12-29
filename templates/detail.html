@@ -1,16 +1,31 @@
 {% extends "base.html" %}
 
+{% block extra_scripts %}
+<script>
+setTimeout(() => {
+  var postsCreated = [ ...document.getElementsByClassName('post-created-utc-string')];
+  postsCreated.forEach(date => {
+    date.innerHTML = moment.utc(date.innerHTML).local().calendar(); //moment.utc(date.innerHTML).local().format('MMMM Do YYYY, h:mm:ss a');
+  });
+}, 0);
+</script>
+{% endblock extra_scripts %}
+
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content_title %}{{ post.title }}{% endblock %}
 
 {% block extra_header %}
   {% if session.logged_in %}
-    <li><a href="{{ url_for('edit', slug=post.slug) }}">Edit post</a></li>
+    <a href="{{ url_for('edit', slug=post.slug) }}"><li>Edit post</li></a>
   {% endif %}
 {% endblock %}
 
 {% block content %}
-  <p>Created {{ post.created.strftime('%m/%d/%Y at %I:%M%p') }}</p>
-  {{ post.html_content }}
+  <div class="post-created">
+    <p class="post-created-utc-string">{{ post.created }}</p>
+  </div>
+  <div class="post-content">
+    {{ post.html_content }}
+  </div>
 {% endblock %}

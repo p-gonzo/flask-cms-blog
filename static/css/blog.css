@@ -1,0 +1,144 @@
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #e2e1e0;
+}
+
+.navbar {
+    width: 100%;
+    height: 50px;
+    background-color: #555555
+}
+
+.navbar-container, .navbar-content {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+.navbar-content {
+    display: flex;
+    justify-content: space-around;
+    list-style-type: none;
+    align-items: center;
+    padding: 0;
+}
+
+.navbar-content a {
+    width: 15%;
+    font-size: 1.5em;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    text-decoration: none;
+}
+
+.navbar-content a:hover {
+    background-color: black;
+}
+
+.navbar-content a li {
+    text-decoration: none;
+    color: white;
+    font-weight: 100;
+}
+
+footer p {
+    text-align: center;
+    font-weight: 300;
+}
+
+.main-content-container {
+    width: 80%;
+    margin: 0 auto;
+    background-color: #ffffff;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    padding: 5%;
+}
+
+.page-header h1 {
+    font-weight: 100;
+    text-align: center;
+    font-size: 3em;
+}
+
+.post-index-overview {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    align-content: center;
+    color: black;
+    text-decoration: none;
+    transition: all 0.8s cubic-bezier(.25,.8,.25,1);
+    padding: 30px 0;
+}
+.post-index-overview:hover {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    background-color: rgb(231, 230, 230);
+}
+.post-index-overview .title-and-date {
+    width: 40%;
+    text-align: center;
+}
+.post-index-overview .title-and-date h3 {
+    font-size: 2em;
+    font-weight: 400;
+    text-align: center;
+    margin-top: 0;
+}
+.post-index-overview .post-preview {
+    width: 60%;
+}
+.post-index-overview .post-preview p {
+    margin-top: 0;
+}
+
+.alert {
+    display: flex;
+    width: 70%;
+    justify-content: space-between;
+    background-color: lightgray;
+    margin: 0 auto;
+    border-radius: 5px;
+}
+
+.alert-success {
+    background-color: lightgreen;
+}
+.alert-danger {
+    background-color: lightcoral;
+}
+
+.alert p {
+    width: 100%;
+    text-align: center;
+}
+
+.alert button{
+    border-radius: 2em;
+    position: absolute;
+}
+
+.alert button i{
+    font-size: 1.5em;
+}
+
+.post-title-input{
+    width:100%;
+    font-size: 2em;
+    text-align: center;
+    font-weight: 100;
+}
+
+.post-content, .post-created {
+    width: 80%;
+    margin: 0 auto;
+}
+.post-content {
+    font-size: 1.3em;
+}
+.post-created {
+    text-align: right;
+}
+
