@@ -7,7 +7,8 @@ body {
 .navbar {
     width: 100%;
     height: 50px;
-    background-color: #555555
+    background-color: #555555;
+    z-index: 99;
 }
 
 .navbar-container, .navbar-content {
@@ -45,6 +46,18 @@ body {
     font-weight: 100;
 }
 
+.navbar-content .navbar-brand {
+    display: none;
+}
+.navbar-content .navbar-brand li {
+    color: red;
+    /* font-weight: 400; */
+}
+.navbar-content .navbar-brand:hover {
+    background-color: #555555;
+    cursor: default;
+}
+
 .sticky-navbar {
     position: fixed;
     top: 0;
@@ -70,15 +83,22 @@ footer p {
 .page-header {
     height: 150px;
     display: flex;
+    align-content: space-around;
     align-items: center;
+    flex-wrap: wrap;
 }
-
-.page-header h1 {
+.page-header h1, .page-header h2 {
     font-weight: 100;
-    text-align: center;
-    font-size: 3em;
-    margin: 0 auto;
+    margin: 0;
     width: 100%;
+    text-align: center;
+}
+.page-header h1 {
+    font-size: 3em;
+    color: red;
+}
+.page-header h2 {
+    font-size: 2em;
 }
 
 .post-index-overview {
@@ -104,6 +124,9 @@ footer p {
     font-weight: 400;
     text-align: center;
     margin-top: 0;
+}
+.post-index-overview .title-and-date p {
+    color: red;
 }
 .post-index-overview .post-preview {
     width: 60%;
@@ -158,5 +181,17 @@ footer p {
 }
 .post-created {
     text-align: right;
+}
+
+.highlight {
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    padding: 1px 5%;
+    overflow-x: scroll;
+}
+
+img {
+    display: block;
+    margin: 0 auto;
+    max-width: 75%;
 }
 
