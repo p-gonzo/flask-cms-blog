@@ -14,6 +14,5 @@ elif os.environ['RUN_ENVIRON'] == 'local':
 elif os.environ['RUN_ENVIRON'] == 'heroku':
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
-app.config['ADMIN_PASSWORD'] = os.environ['ADMIN_PASSWORD']
 app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 db = SQLAlchemy(app)
