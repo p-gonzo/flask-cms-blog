@@ -1,7 +1,6 @@
 body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
-    background-color: #e2e1e0;
 }
 
 .navbar {
@@ -81,6 +80,7 @@ footer p {
 }
 
 .page-header {
+    background-color: #e5e4e2;
     height: 150px;
     display: flex;
     align-content: space-around;
