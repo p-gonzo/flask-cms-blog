@@ -16,7 +16,7 @@ from flask import (
 from sqlalchemy import exc
 
 from main import app, db
-from models import Post
+from models import Post, User
 
 @app.context_processor
 def inject_globals():
@@ -33,17 +33,18 @@ def login_required(fn):
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     next_url = request.args.get('next') or request.form.get('next')
-    if request.method == 'POST' and request.form.get('password'):
+    if request.method == 'POST' and request.form.get('password') and request.form.get('username'):
+        username = request.form.get('username')
         password = request.form.get('password')
-        # TODO: If using a one-way hash, you would also hash the user-submitted
-        # password and do the comparison on the hashed versions.
-        if password == app.config['ADMIN_PASSWORD']:
+        user = User.get(username)
+        if user and user.check_password(password):
             session['logged_in'] = True
+            session['user_id'] = user.id
             session.permanent = True  # Use cookie to store session.
             flash('You are now logged in.', 'success')
             return redirect(next_url or url_for('index'))
         else:
-            flash('Incorrect password.', 'danger')
+            flash('User/password combination does not exist', 'danger')
     return render_template('login.html', next_url=next_url)
 
 @app.route('/logout/', methods=['GET', 'POST'])
@@ -59,6 +60,7 @@ def index():
 
 def _create_or_edit(post, template):
     if request.method == 'POST':
+        post.user_id = session['user_id']
         post.title = request.form.get('title') or ''
         post.content = request.form.get('content') or ''
         post.published = True if request.form.get('published') == 'y' else False

@@ -7,6 +7,7 @@
 {% block content %}
   <div class="login-div">
     <form action="{{ url_for('login', next=next_url) }}" method="post">
+      <input placeholder="Username" class="form-control" id="username" name="username" type="text">
       <input placeholder="Password" class="form-control" id="password" name="password" type="password">
       <button class="btn btn-default" type="submit">Log in</button>
     </form>
