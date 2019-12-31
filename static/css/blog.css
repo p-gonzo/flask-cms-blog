@@ -52,7 +52,7 @@ body {
 .navbar-content .navbar-brand li {
     color: red;
     text-align: center;
-    /* font-weight: 400; */
+    font-weight: 400;
 }
 .navbar-content .navbar-brand:hover {
     background-color: #555555;
