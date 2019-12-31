@@ -62,6 +62,7 @@ body {
 .sticky-navbar {
     position: fixed;
     top: 0;
+    box-shadow: none;
 }
 
 .sticky-navbar + #main-content-container {
