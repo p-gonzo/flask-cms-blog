@@ -49,14 +49,13 @@
           <p>{{ message }}</p>
         </div>
       {% endfor %}
-
       {% block content %}{% endblock %}
-
-      <footer>
-        <hr />
-        <p>Philip Gonzalez &copy; 2019 - {{now.year}}</p>
-      </footer>
     </div>
+    <footer>
+      <p>&copy; 2019 - {{now.year}} <a href="{{ url_for('about') }}">Philip Gonzalez</a></p>
+      <div style="width: 5%;"></div>
+      <p>View source on <a href="https://github.com/p-gonzo/personal-blog" target="blank">Github</a></p>
+    </footer>
   <script src="{{ url_for('static', filename='js/blog.js') }}"></script>
   </body>
 </html>

@@ -68,14 +68,29 @@ body {
     margin-top: 100px;
 }
 
+footer {
+    height: 75px;
+    background-color: #e5e4e2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 footer p {
     text-align: center;
     font-weight: 300;
+    margin: 0;
+}
+
+footer p a {
+    color: red;
+    text-decoration: none;
+    font-weight: 400;
 }
 
 #main-content-container {
     min-height: 80vh;
-    margin: 40px auto;
+    margin: 40px auto 0 auto;
     background-color: #ffffff;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     padding: 20px 5%;
