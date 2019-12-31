@@ -35,9 +35,9 @@
             <a href="{{ url_for('contact') }}"><li>contact</li></a>
             {% block extra_header %}{% endblock %}
           {% if session.logged_in %}
-            <a href="{{ url_for('drafts') }}"><li>Drafts</li></a>
-            <a href="{{ url_for('create') }}"><li>Create Post</li></a>
-            <a href="{{ url_for('logout') }}"><li>Sign out</li></a>
+            <a href="{{ url_for('drafts') }}"><li>drafts</li></a>
+            <a href="{{ url_for('create') }}"><li>create</li></a>
+            <a href="{{ url_for('logout') }}"><li>log out</li></a>
           {% endif %}
         </ul>
       </div>
