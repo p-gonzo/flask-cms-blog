@@ -207,6 +207,9 @@ footer p a {
 .post-content p {
     line-height: 1.9em;
 }
+.post-content ol, .post-content ul {
+    line-height: 1.5em;
+}
 
 .highlight {
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
