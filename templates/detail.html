@@ -3,7 +3,6 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content_title %}{{ post.title }}{% endblock %}
-{% block content_subtitle %}Philip Gonzalez{% endblock %}
 
 {% block extra_header %}
   {% if session.logged_in %}
@@ -21,4 +20,7 @@
   <div class="post-content">
     {{ post.html_content }}
   </div>
+  {% if preview %}
+  <a href="{{ url_for('edit', slug=post.slug) }}"><button class="back-to-edit-btn"><i class="fas fa-arrow-left"></i><br /> Editor</button></a>
+  {% endif %}
 {% endblock %}

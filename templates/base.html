@@ -25,16 +25,17 @@
     <div class="navbar" id="navbar" >
       <div class="navbar-container">
         <ul class="navbar-content" id="navbar-content">
-            <a href="{{ url_for('index') }}"><li>Blog</li></a>
-            <a href="{{ url_for('about') }}"><li>About</li></a>
-            <a href="{{ url_for('contact') }}"><li>Contact</li></a>
+          {% if not session.logged_in %}
+            <a class="navbar-brand" href="#"><li>P G</li></a>
+          {% endif %}
+            <a href="{{ url_for('about') }}"><li>about</li></a>
+            <a href="{{ url_for('index') }}"><li>blog</li></a>
+            <a href="{{ url_for('contact') }}"><li>contact</li></a>
             {% block extra_header %}{% endblock %}
           {% if session.logged_in %}
             <a href="{{ url_for('drafts') }}"><li>Drafts</li></a>
             <a href="{{ url_for('create') }}"><li>Create Post</li></a>
             <a href="{{ url_for('logout') }}"><li>Sign out</li></a>
-          {% else %}
-            <a class="navbar-brand" href="#"><li>Philip Gonzalez</li></a>
           {% endif %}
         </ul>
       </div>

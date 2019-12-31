@@ -121,6 +121,15 @@ def detail(slug):
     except AttributeError:
         return not_found(None);
 
+@app.route('/preview/<slug>/')
+@login_required
+def preview(slug):
+    post = Post.query.filter(Post.slug == slug).first()
+    try:
+        return render_template('detail.html', post=post, slug=post.slug, preview=True)
+    except AttributeError:
+        return not_found(None);
+
 
 @app.route('/posts/<slug>/edit/', methods=['GET', 'POST'])
 @login_required

@@ -31,20 +31,18 @@
     <div class="form-group">
       <textarea id="content" name="content">{{ post.content }}</textarea>
     </div>
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <div class="checkbox">
-          <label>
-            <input name="published" type="checkbox" value="y"{% if post.published %} checked="checked"{% endif %}> Publish
-          </label>
-        </div>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
+    <br />
+    <br />
+    <div class="preview-and-publish">
+      {% block preview %}{% endblock %}
+      <div class="save-and-publish">
+        <label class="publish-label">
+          <input class="publish-check" name="published" type="checkbox" value="y"{% if post.published %} checked="checked"{% endif %}>
+          <span class="publish-check-text">Publish</span>
+        </label>
         <button class="btn btn-primary" type="submit">{% block save_button %}Create{% endblock %}</button>
-        <a class="btn btn-default" href="{{ url_for('index') }}">Cancel</a>
       </div>
+      <a href="{{ url_for('index') }}"><button class="cancel-btn" type="button"><i class="fas fa-ban"></i><br />Cancel</button></a>
     </div>
   </form>
 {% endblock %}
