@@ -7,4 +7,4 @@
 {% block form_action %}{{ url_for('edit', slug=post.slug) }}{% endblock %}
 
 {% block save_button %}Save{% endblock %}
-{% block preview %}<a href="{{ url_for('preview', slug=post.slug) }}"><button class="preview-btn" type="button"><i class="fas fa-search"></i><br />Preview</button></a>{% endblock %}
+{% block preview %}<button class="preview-btn" type="submit" name="action" value="preview"><i class="fas fa-search"></i><br />Preview</button>{% endblock %}

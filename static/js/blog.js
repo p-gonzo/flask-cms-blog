@@ -5,26 +5,16 @@ function setPostsCalendarDate() {
   });
 }
 
-function hasClass(elem, className) {
-  return elem.className.split(' ').indexOf(className) > -1;
+function fadeOutAlerts() {
+  $(function() {
+    $('.alert').delay(0).fadeIn('normal', function() {
+      $(this).delay(2500).fadeOut();
+    });
+  });
 }
 
-document.addEventListener('click', evt => {
-  if (hasClass(evt.target, 'close')) {
-    evt.target.parentNode.remove();
-  } else if (hasClass(evt.target, 'fa-times')) {
-    evt.target.parentNode.parentNode.remove();
-  }
-}, false);
 
-window.onscroll = function() {handleStickNav()};
-
-let navbar;
-let navbarBrands;
-let contentContainer;
-let stickyThreshold;
-
-function handleStickNav() {
+function handleStickNav(navbar, navbarBrands, stickyThreshold) {
   if (window.pageYOffset >= stickyThreshold) {
     navbar.classList.add('sticky-navbar');
     navbarBrands.forEach(elem => elem.style.display = 'flex');
@@ -36,9 +26,12 @@ function handleStickNav() {
 
 // Fire after the DOM has loaded
 setTimeout(() => {
+  const navbar = document.getElementById('navbar');
+  const navbarBrands = [...document.getElementsByClassName('navbar-brand')];
+  const stickyThreshold = navbar.offsetTop;
+  window.onscroll = function() { handleStickNav(navbar, navbarBrands, stickyThreshold) };
+
+  fadeOutAlerts()
+
   setPostsCalendarDate();
-  navbar = document.getElementById('navbar');
-  navbarBrands = [...document.getElementsByClassName('navbar-brand')];
-  contentContainer = document.getElementById('main-content-container');
-  stickyThreshold = navbar.offsetTop;
 }, 0);

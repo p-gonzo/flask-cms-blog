@@ -8,9 +8,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous" />
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicons/favicon.ico') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/blog.css') }}" />
+    <link rel="stylesheet" media="screen and (max-width: 600px)" href="{{ url_for('static', filename='css/mobile-blog.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/hilite.css') }}" />
     {% block extra_head %}{% endblock %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     {% block extra_scripts %}{% endblock %}
   </head>
 
@@ -45,7 +47,6 @@
       {% for category, message in get_flashed_messages(with_categories=true) %}
         <div class="alert alert-{{ category }} alert-dismissable">
           <p>{{ message }}</p>
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true"><i class="fas fa-times"></i></button>
         </div>
       {% endfor %}
 

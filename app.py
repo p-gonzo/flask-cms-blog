@@ -41,10 +41,10 @@ def login():
             session['logged_in'] = True
             session['user_id'] = user.id
             session.permanent = True  # Use cookie to store session.
-            flash('You are now logged in.', 'success')
+            flash('Logged in.', 'success')
             return redirect(next_url or url_for('index'))
         else:
-            flash('User/password combination does not exist', 'danger')
+            flash('Bad user/password combination.', 'danger')
     return render_template('login.html', next_url=next_url)
 
 @app.route('/logout/', methods=['GET', 'POST'])
@@ -65,14 +65,16 @@ def _create_or_edit(post, template):
         post.content = request.form.get('content') or ''
         post.published = True if request.form.get('published') == 'y' else False
         if not (post.title and post.content):
-            flash('Title and Content are required.', 'danger')
+            flash('Title and body required.', 'danger')
         else:
             try:
                 post.save()
             except exc.IntegrityError:
-                flash('Error: this title is already in use.', 'danger')
+                flash('Error: title already in use.', 'danger')
             else:
-                flash('Post saved successfully.', 'success')
+                flash('Post saved.', 'success')
+                if request.form.get('action') == 'preview':
+                    return redirect(url_for('preview', slug=post.slug))
                 if post.published:
                     return redirect(url_for('detail', slug=post.slug))
                 else:
@@ -139,7 +141,7 @@ def edit(slug):
 
 @app.errorhandler(404)
 def not_found(exc):
-    flash('That page does not exist', 'danger')
+    flash('Page does not exist', 'danger')
     return render_template('index.html', entries=Post.public().all())
 
 def main():

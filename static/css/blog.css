@@ -74,7 +74,7 @@ footer p {
 }
 
 #main-content-container {
-    width: 80%;
+    min-height: 80vh;
     margin: 40px auto;
     background-color: #ffffff;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
@@ -170,15 +170,6 @@ footer p {
     text-align: center;
 }
 
-.alert button{
-    border-radius: 2em;
-    position: absolute;
-}
-
-.alert button i{
-    font-size: 1.5em;
-}
-
 .post-title-input{
     width:100%;
     font-size: 2em;
@@ -187,7 +178,7 @@ footer p {
 }
 
 .post-content, .post-created {
-    width: 80%;
+    width: 60%;
     margin: 0 auto;
 }
 .post-content {
@@ -195,6 +186,10 @@ footer p {
 }
 .post-created {
     text-align: right;
+}
+
+.post-content p {
+    line-height: 1.9em;
 }
 
 .highlight {
@@ -263,10 +258,6 @@ img {
     text-align: center;
     width: 50%;
 }
-.publish-label:hover {
-    cursor: pointer;
-    color: lightsalmon;
-}
 .save-and-publish button {
     font-size: 1em;
     font-weight: 100;
@@ -279,13 +270,7 @@ img {
     cursor: pointer;
 
 }
-.publish-check {
-    display: none;
-}
-label input.publish-check:checked + .publish-check-text {
-    color: red;
-    font-weight: 400;
-}
+
 .preview-btn, .cancel-btn {
     border-radius: 0.2em;
     transition: 0.5s;
@@ -298,7 +283,7 @@ label input.publish-check:checked + .publish-check-text {
 }
 .cancel-btn:hover {
     cursor: pointer;
-    background-color: lightsalmon;
+    background-color: red;
 }
 
 .iframe-container {
@@ -321,3 +306,14 @@ label input.publish-check:checked + .publish-check-text {
     padding-top: 75%;
 }
 
+.switch-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 0.4em;
+}
+
+.switch-container p {
+    margin: 0;
+    padding-right: 0.75em;
+}

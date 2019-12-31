@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
+{% block extra_head %}
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/switch.css') }}" />
+{% endblock extra_head %}
 {% block extra_scripts %}
-{{ super() }}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/latest/styles/github.min.css">
 <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
@@ -36,13 +38,20 @@
     <div class="preview-and-publish">
       {% block preview %}{% endblock %}
       <div class="save-and-publish">
-        <label class="publish-label">
+        <!-- <label class="publish-label">
           <input class="publish-check" name="published" type="checkbox" value="y"{% if post.published %} checked="checked"{% endif %}>
           <span class="publish-check-text">Publish</span>
-        </label>
-        <button class="btn btn-primary" type="submit">{% block save_button %}Create{% endblock %}</button>
+        </label> -->
+        <div class="switch-container">
+          <p>Publish</p>
+          <label class="switch">
+            <input name="published" type="checkbox" value="y"{% if post.published %} checked="checked"{% endif %}>
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <button class="btn btn-primary" type="submit" name="action" value="save">{% block save_button %}Create{% endblock %}</button>
       </div>
-      <a href="{{ url_for('index') }}"><button class="cancel-btn" type="button"><i class="fas fa-ban"></i><br />Cancel</button></a>
+      <a href="{{ url_for('index') }}"><button type="button" class="cancel-btn" ><i class="fas fa-ban"></i><br />Cancel</button></a>
     </div>
   </form>
 {% endblock %}
