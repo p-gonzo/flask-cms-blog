@@ -25,13 +25,16 @@
 {% block content_title %}Create post{% endblock %}
 
 {% block content %}
-  <form action="{% block form_action %}{{ url_for('create') }}{% endblock %}" class="form-horizontal" method="post">
+  <form action="{% block form_action %}{{ url_for('create') }}{% endblock %}" class="form-horizontal" method="post" enctype="multipart/form-data">
     <div class="form-group">
       <input class="post-title-input" placeholder="Post Title" id="title" name="title" type="text" value="{{ post.title }}">
     </div>
     <br />
-    <div class="form-group">
-      <textarea id="content" name="content">{{ post.content }}</textarea>
+    <div class="text-area-container">
+      <div class="text-area-inner-container">
+        <textarea id="content" name="content">{{ post.content }}</textarea>
+      </div>
+      {% block photo_upload %}{% endblock %}
     </div>
     <br />
     <br />

@@ -15,4 +15,5 @@ elif os.environ['RUN_ENVIRON'] == 'heroku':
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
 app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
+app.config['UPLOAD_FOLDER'] = './test_uploads'
 db = SQLAlchemy(app)

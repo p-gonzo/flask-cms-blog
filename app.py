@@ -12,7 +12,7 @@ from flask import (
     session,
     url_for
 )
-
+from werkzeug.utils import secure_filename
 from sqlalchemy import exc
 
 from main import app, db
@@ -58,6 +58,10 @@ def logout():
 def index():
     return render_template('index.html', entries=Post.public().all())
 
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
+
 def _create_or_edit(post, template):
     if request.method == 'POST':
         post.user_id = session['user_id']
@@ -75,7 +79,20 @@ def _create_or_edit(post, template):
                 flash('Post saved.', 'success')
                 if request.form.get('action') == 'preview':
                     return redirect(url_for('preview', slug=post.slug))
-                if post.published:
+                elif request.form.get('action') == 'upload-photo':
+                    if 'file' not in request.files:
+                        flash('No file part', 'danger')
+                        return redirect(request.url)
+                    file = request.files['file']
+                    if file.filename == '':
+                        flash('No selected file', 'danger')
+                        return redirect(request.url)
+                    if file and allowed_file(file.filename):
+                        filename = secure_filename(file.filename)
+                        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                        flash(filename)
+                        return redirect(request.url)
+                elif post.published:
                     return redirect(url_for('detail', slug=post.slug))
                 else:
                     return redirect(url_for('edit', slug=post.slug))

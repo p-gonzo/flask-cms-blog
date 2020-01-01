@@ -211,6 +211,7 @@ footer p a {
     line-height: 1.5em;
 }
 
+/* code syntax */
 .highlight {
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     padding: 1px 5%;
@@ -247,6 +248,20 @@ img {
     background-color: lightgreen;
     color: white;
     cursor: pointer;
+}
+
+.text-area-container {
+    display: flex;
+}
+.text-area-container .text-area-inner-container {
+    width: 80%;
+}
+.text-area-container .text-area-inner-container {
+    width: 80%;
+}
+.text-area-container .photo-upload-container {
+    width: 20%;
+    padding: 0 10px;
 }
 
 .back-to-edit-btn {
@@ -290,19 +305,23 @@ img {
 
 }
 
-.preview-btn, .cancel-btn {
+.preview-btn, .cancel-btn, .upload-btn {
     border-radius: 0.2em;
     transition: 0.5s;
     font-size: 1.5em;
     font-weight: 100;
 }
-.preview-btn:hover {
+.preview-btn:hover, .upload-btn:hover {
     cursor: pointer;
     background-color: lightgreen;
 }
 .cancel-btn:hover {
     cursor: pointer;
     background-color: red;
+}
+.upload-btn{
+    width: 100%;
+    margin-top: 10px;
 }
 
 .iframe-container {

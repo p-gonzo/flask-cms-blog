@@ -55,6 +55,7 @@ class Post(db.Model):
 
     tags = db.relationship("Tag", secondary="post_tag", back_populates="posts")
     comments = db.relationship("Comment")
+    photos = db.relationship("Photo")
 
 
     @property
@@ -104,3 +105,8 @@ class Comment(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
     name = db.Column(db.String(128))
     comment = db.Column(db.Text)
+
+class Photo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+    location = db.Column(db.Text)

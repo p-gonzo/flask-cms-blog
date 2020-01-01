@@ -6,5 +6,15 @@
 
 {% block form_action %}{{ url_for('edit', slug=post.slug) }}{% endblock %}
 
+{% block photo_upload %}
+    <div class="photo-upload-container">
+        <h3>Upload a Photo:</h3>
+        <input type=file name=file>
+        <br />
+        <button class="upload-btn" type="submit" name="action" value="upload-photo">Upload</button>
+    </div>
+{% endblock %}
+
 {% block save_button %}Save{% endblock %}
+
 {% block preview %}<button class="preview-btn" type="submit" name="action" value="preview"><i class="fas fa-search"></i><br />Preview</button>{% endblock %}
