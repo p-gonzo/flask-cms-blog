@@ -259,9 +259,25 @@ img {
 .text-area-container .text-area-inner-container {
     width: 80%;
 }
-.text-area-container .photo-upload-container {
+.text-area-container .image-upload-container {
     width: 20%;
     padding: 0 10px;
+}
+
+.image-thumbnails {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.thumbnail {
+    width: 40%;
+}
+
+.thumbnail:hover {
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
 
 .back-to-edit-btn {

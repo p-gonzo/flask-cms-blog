@@ -10,13 +10,18 @@ from flask import (
     request,
     Response,
     session,
-    url_for
+    url_for,
 )
 from werkzeug.utils import secure_filename
 from sqlalchemy import exc
 
 from main import app, db
-from models import Post, User
+from models import Post, User, Image
+
+import boto3
+
+s3 = boto3.resource('s3')
+s3_bucket = s3.Bucket(os.environ['AWS_BUCKET_NAME'])
 
 @app.context_processor
 def inject_globals():
@@ -58,11 +63,14 @@ def logout():
 def index():
     return render_template('index.html', entries=Post.public().all())
 
-
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
 
 def _create_or_edit(post, template):
+    """
+    Create or edit post
+    Also used for uploading images
+    """
     if request.method == 'POST':
         post.user_id = session['user_id']
         post.title = request.form.get('title') or ''
@@ -79,7 +87,7 @@ def _create_or_edit(post, template):
                 flash('Post saved.', 'success')
                 if request.form.get('action') == 'preview':
                     return redirect(url_for('preview', slug=post.slug))
-                elif request.form.get('action') == 'upload-photo':
+                elif request.form.get('action') == 'upload-image':
                     if 'file' not in request.files:
                         flash('No file part', 'danger')
                         return redirect(request.url)
@@ -89,8 +97,9 @@ def _create_or_edit(post, template):
                         return redirect(request.url)
                     if file and allowed_file(file.filename):
                         filename = secure_filename(file.filename)
-                        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                        flash(filename)
+                        s3_bucket.put_object(Key=f'{post.slug}/{filename}', Body=file, ACL='public-read')
+                        new_image = Image(post.id, f'{os.environ["AWS_BUCKET_URL"]}/{post.slug}/{filename}')
+                        new_image.save()
                         return redirect(request.url)
                 elif post.published:
                     return redirect(url_for('detail', slug=post.slug))

@@ -6,12 +6,18 @@
 
 {% block form_action %}{{ url_for('edit', slug=post.slug) }}{% endblock %}
 
-{% block photo_upload %}
-    <div class="photo-upload-container">
-        <h3>Upload a Photo:</h3>
+{% block image_upload %}
+    <div class="image-upload-container">
+        <h3>Upload an image:</h3>
         <input type=file name=file>
         <br />
-        <button class="upload-btn" type="submit" name="action" value="upload-photo">Upload</button>
+        <button class="upload-btn" type="submit" name="action" value="upload-image">Upload</button>
+        <h3>existing images:</h3>
+        <div class=image-thumbnails>
+            {% for image in post.images %}
+                <img class="thumbnail" src="{{image.location}}" />
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
 

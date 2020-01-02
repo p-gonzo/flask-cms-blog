@@ -13,6 +13,18 @@ function fadeOutAlerts() {
   });
 }
 
+function setThumbnailClickListeners() {
+  $(".thumbnail").click(function(evt) {
+    let url = evt.target.src;
+    let tempElem = document.createElement('textarea');
+    document.body.appendChild(tempElem);
+    tempElem.value = '![](' + url + ')';
+    tempElem.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempElem);
+  });
+}
+
 
 function handleStickNav(navbar, navbarBrands, stickyThreshold) {
   if (window.pageYOffset >= stickyThreshold) {
@@ -34,4 +46,6 @@ setTimeout(() => {
   fadeOutAlerts()
 
   setPostsCalendarDate();
+
+  setThumbnailClickListeners();
 }, 0);

@@ -55,7 +55,7 @@ class Post(db.Model):
 
     tags = db.relationship("Tag", secondary="post_tag", back_populates="posts")
     comments = db.relationship("Comment")
-    photos = db.relationship("Photo")
+    images = db.relationship("Image")
 
 
     @property
@@ -106,7 +106,15 @@ class Comment(db.Model):
     name = db.Column(db.String(128))
     comment = db.Column(db.Text)
 
-class Photo(db.Model):
+class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
     location = db.Column(db.Text)
+
+    def __init__(self, post_id, location):
+        self.post_id = post_id
+        self.location = location
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
