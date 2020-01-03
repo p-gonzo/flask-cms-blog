@@ -5,6 +5,12 @@ function setPostsCalendarDate() {
   });
 }
 
+function wrapPostImagesWithFancyBox() {
+  $('.post-content img').wrap(function() {
+    return `<a href="${this.src}" data-fancybox data-caption="${this.alt}" ></div>`;
+  });
+}
+
 function fadeOutAlerts() {
   $(function() {
     $('.alert').delay(0).fadeIn('normal', function() {
@@ -48,4 +54,6 @@ setTimeout(() => {
   setPostsCalendarDate();
 
   setThumbnailClickListeners();
+
+  wrapPostImagesWithFancyBox();
 }, 0);

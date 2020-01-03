@@ -1,3 +1,8 @@
 .post-content, .post-created {
     width: 92%;
 }
+
+.text-area-container .text-area-inner-container, 
+.text-area-container .image-upload-container {
+    width: 100%;
+}
