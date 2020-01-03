@@ -226,6 +226,12 @@ footer p a {
     max-width: 95%;
 }
 
+.editor-preview-side img {
+    display: block;
+    margin: 0 auto;
+    max-width: 95%;
+}
+
 .logout-div, .login-div {
     display: flex;
     width: 50%;
