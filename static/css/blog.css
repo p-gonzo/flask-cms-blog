@@ -255,8 +255,8 @@ footer p a {
 
 .text-area-container {
     display: flex;
-    /* flex-wrap: wrap; */
-    /* justify-content: space-around; */
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 .text-area-container .text-area-inner-container {
     width: 80%;
