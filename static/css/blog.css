@@ -79,7 +79,7 @@ footer {
 
 footer p {
     text-align: center;
-    font-weight: 300;
+    font-weight: 100;
     margin: 0;
 }
 
@@ -195,10 +195,12 @@ footer p a {
 
 .post-content, .post-created {
     width: 60%;
+    min-width: 600px;
     margin: 0 auto;
 }
 .post-content {
-    font-size: 1.3em;
+    font-size: 1.2rem;
+    color: #333333;
 }
 .post-created {
     text-align: right;
@@ -218,10 +220,11 @@ footer p a {
     overflow-x: scroll;
 }
 
-img {
+.post-content img {
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     display: block;
     margin: 0 auto;
-    max-width: 75%;
+    max-width: 95%;
 }
 
 .logout-div, .login-div {
@@ -272,7 +275,7 @@ img {
 }
 
 .thumbnail {
-    width: 40%;
+    width: 45%;
 }
 
 .thumbnail:hover {

@@ -1,5 +1,6 @@
 .post-content, .post-created {
     width: 92%;
+    min-width: 92%;
 }
 
 .text-area-container .text-area-inner-container, 
