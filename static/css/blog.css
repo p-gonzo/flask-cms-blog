@@ -195,7 +195,6 @@ footer p a {
 
 .post-content, .post-created {
     width: 60%;
-    min-width: 600px;
     margin: 0 auto;
 }
 .post-content {
